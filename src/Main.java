@@ -3,6 +3,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
 Name: Alexys Octavio Veloz
@@ -17,6 +19,7 @@ public class Main {
      static ArrayList<LinkedList> masterYardList = new ArrayList<>();
      static ArrayList<LinkedList> masterIncoming = new ArrayList<>();
     public static void main(String[] args) throws FileNotFoundException {
+        int MAX = 30;
         //extract the yard file csv and add into an arraylist
         //LinkedList<Integer> YardConfig = new LinkedList<Integer>();
         File file1 = new File("in\\theYardFile.csv");
@@ -51,6 +54,29 @@ public class Main {
             //incoming.clear();
 
         }
+
+        //making the train threads
+        ExecutorService application = Executors.newFixedThreadPool(MAX);
+        try {
+            for (int i = 0; i < masterIncoming.size();i++){
+                application.execute(new Train((Integer) masterIncoming.get(i).get(0),(Integer) masterIncoming.get(i).get(1),(Integer) masterIncoming.get(i).get(2)));
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        application.shutdown();
+        /*
+        Train []trains = new Train[masterIncoming.size()];
+        for (int i = 0; i < masterIncoming.size();i++){
+            trains[i] = new Train((Integer) masterIncoming.get(i).get(0),(Integer) masterIncoming.get(i).get(1),(Integer) masterIncoming.get(i).get(2));
+            trains[i].run();
+        }
+
+        for(int i = 0; i < masterIncoming.size();i++){
+            new Train((Integer) masterIncoming.get(i).get(0),(Integer) masterIncoming.get(i).get(1),(Integer) masterIncoming.get(i).get(2)).start();
+        }
+        */
 
         /* Testing to make sure info stayed where it needed
     for (int i = 0; i < masterYardList.size();i++) {
