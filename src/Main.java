@@ -12,7 +12,7 @@ Course: CNT 4714 Fall 2023
 Assignment title: Project 2 – Multi-threaded programming in Java
 Date: October 8, 2023
 Class: Main
-Description: a description of what the class provides would normally be expected.
+Description: This Main just sets up the threads to execute as well as reading in the csv's.
 */
 
 public class Main {
@@ -69,8 +69,13 @@ public class Main {
         finally {
 
             application.shutdown();
+            while (!application.isTerminated()){
+
+            }
             System.out.printf("$ $ $ SIMULATION ENDS $ $ $\n");
+
         }
+
         /*
         Train []trains = new Train[masterIncoming.size()];
         for (int i = 0; i < masterIncoming.size();i++){
