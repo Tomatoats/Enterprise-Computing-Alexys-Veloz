@@ -57,6 +57,7 @@ public class Main {
 
         //making the train threads
         ExecutorService application = Executors.newFixedThreadPool(MAX);
+        System.out.printf("$ $ $ TRAIN MOVEMENT SIMULATION BEGINS........... $ $ $\n");
         try {
             for (int i = 0; i < masterIncoming.size();i++){
                 application.execute(new Train((Integer) masterIncoming.get(i).get(0),(Integer) masterIncoming.get(i).get(1),(Integer) masterIncoming.get(i).get(2)));
@@ -65,7 +66,11 @@ public class Main {
         catch (Exception e){
             e.printStackTrace();
         }
-        application.shutdown();
+        finally {
+
+            application.shutdown();
+            System.out.printf("$ $ $ SIMULATION ENDS $ $ $\n");
+        }
         /*
         Train []trains = new Train[masterIncoming.size()];
         for (int i = 0; i < masterIncoming.size();i++){
