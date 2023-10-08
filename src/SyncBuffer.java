@@ -122,7 +122,7 @@ public class SyncBuffer {
                         try {
                             if (checkLocks(lock3)) {
                                 //send it out! all ready
-                                System.out.printf("Train # HOLDS ALL NEEDED SWITCH LOCKS -- Train movement begins.\n\n\n",trainID);
+                                System.out.printf("Train %d HOLDS ALL NEEDED SWITCH LOCKS -- Train movement begins.\n\n\n",trainID);
                                 try {
                                     Thread.sleep((generator.nextInt(100)));
                                 } catch (InterruptedException e) {
