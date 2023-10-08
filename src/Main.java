@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -12,16 +11,18 @@ Course: CNT 4714 Fall 2023
 Assignment title: Project 2 – Multi-threaded programming in Java
 Date: October 8, 2023
 Class: Main
-Description: This Main just sets up the threads to execute as well as reading in the csv's.
+Description: This Main just sets up the threads to execute as well as reading in the csv's and outputing to txt
 */
 
 public class Main {
      static ArrayList<LinkedList> masterYardList = new ArrayList<>();
      static ArrayList<LinkedList> masterIncoming = new ArrayList<>();
+
+     static ArrayList<String> toWriteToConsole = new ArrayList<>();
     public static void main(String[] args) throws FileNotFoundException {
         int MAX = 30;
         //extract the yard file csv and add into an arraylist
-        //LinkedList<Integer> YardConfig = new LinkedList<Integer>();
+
         File file1 = new File("in\\theYardFile.csv");
         Scanner scan1 = new Scanner(file1);
         scan1.useDelimiter("\n");
@@ -54,10 +55,24 @@ public class Main {
             //incoming.clear();
 
         }
+        try {
+            File toWrite = new File("out\\output.txt");
+            if (toWrite.createNewFile()){
+
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
         //making the train threads
         ExecutorService application = Executors.newFixedThreadPool(MAX);
+        boolean append = false;
+        boolean autoFlush = false;
+        PrintStream out = new PrintStream(new FileOutputStream("out\\output.txt",append),autoFlush);
+        System.setOut(out); //idk why but it keeps making a "production" whenever i do this but at least the output is right so idc anymore
         System.out.printf("$ $ $ TRAIN MOVEMENT SIMULATION BEGINS........... $ $ $\n");
+
         try {
             for (int i = 0; i < masterIncoming.size();i++){
                 application.execute(new Train((Integer) masterIncoming.get(i).get(0),(Integer) masterIncoming.get(i).get(1),(Integer) masterIncoming.get(i).get(2)));
@@ -75,35 +90,7 @@ public class Main {
             System.out.printf("$ $ $ SIMULATION ENDS $ $ $\n");
 
         }
-
-        /*
-        Train []trains = new Train[masterIncoming.size()];
-        for (int i = 0; i < masterIncoming.size();i++){
-            trains[i] = new Train((Integer) masterIncoming.get(i).get(0),(Integer) masterIncoming.get(i).get(1),(Integer) masterIncoming.get(i).get(2));
-            trains[i].run();
-        }
-
-        for(int i = 0; i < masterIncoming.size();i++){
-            new Train((Integer) masterIncoming.get(i).get(0),(Integer) masterIncoming.get(i).get(1),(Integer) masterIncoming.get(i).get(2)).start();
-        }
-        */
-
-        /* Testing to make sure info stayed where it needed
-    for (int i = 0; i < masterYardList.size();i++) {
-        for (int k = 0; k < masterYardList.get(i).size(); k++) {
-            System.out.println(masterYardList.get(i).get(k));
-        }
-        System.out.printf(" masteryard size: %d , linkedList size: %d \n", masterYardList.size(),masterYardList.get(0).size());
     }
 
-        for (int i = 0; i < masterIncoming.size();i++) {
-            for (int k = 0; k < masterIncoming.get(0).size(); k++) {
-                System.out.println(masterIncoming.get(i).get(k));
-            }
-            System.out.printf(" masterincoming size: %d , linkedList size: %d \n", masterIncoming.size(),masterIncoming.get(0).size());
-        }
-        */
 
-
-    }
 }

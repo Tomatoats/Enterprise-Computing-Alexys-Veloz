@@ -24,77 +24,14 @@ public class SyncBuffer {
     private static final Lock eighthLock = new ReentrantLock();
 
 
-    private static final Condition firstLocked = firstLock.newCondition();
-    private static final Condition secondLocked = secondLock.newCondition();
-    private static final Condition thirdLocked = thirdLock.newCondition();
-    private static final Condition fourthLocked = fourthLock.newCondition();
-    private static final Condition fifthLocked = fifthLock.newCondition();
-    private static final Condition sixthLocked = sixthLock.newCondition();
-    private static final Condition seventhLocked = seventhLock.newCondition();
-    private static final Condition eighthLocked = eighthLock.newCondition();
+
 
     private static Random generator = new Random();
 
 
-    private static boolean occupied = false;
-    /*
-public void set(int value){
-    accessLock.lock();
-    try{
-        while ( occupied )
-        {
-            System.out.printf( "Lock %d is currently occupied!\n", value  );
-            canGo.await();// wait until buffer is empty
-        } // end while
 
-        occupied = true;
-    }
-    catch (Exception e){ e.printStackTrace();}
-    finally {
-        accessLock.unlock();
-    }
-
-
-
-
-    public static boolean checkGo(int value) {
-        boolean flag = false;
-        try {
-            /*while ( occupied )
-            {
-                System.out.printf( "Lock %d is currently occupied!\n", value  );
-                canGo.await();// wait until buffer is empty
-            }*/ // end while
-    //accessLock.lock();
-    //canGo.signal();
-    //occupied = true;
-    //flag = true;
-    //} catch (Exception e) {
-    //e.printStackTrace();
-    //} finally {
-    //accessLock.unlock();
-    //}
-    //return flag;
-    //}
-
-
-    public static void release(int value) {
-
-    }
-
-    /*
-    public int get(){
-        accessLock.lock();
-        try{}
-        catch (Exception e) {e.printStackTrace();}
-        finally {
-            accessLock.unlock();
-        }
-    return 1;
-    }
-
-     */
     public static boolean checkLocks(int lock) throws InterruptedException {
+        //if its free, locks it and makes it true. if not, sends false
         boolean flag = false;
         switch (lock) {
             case 1:
@@ -135,6 +72,7 @@ public void set(int value){
 
 
     public static void unlock(int lock) {
+        //to unlock any switches
         switch (lock) {
             case 1:
                 firstLock.unlock();
@@ -171,46 +109,19 @@ public void set(int value){
         }
     }
 
-    public static void lock(int lock) {
-        switch (lock) {
-            case 1:
-                firstLock.lock();
-                break;
-            case 2:
-                secondLock.lock();
-                break;
-            case 3:
-                thirdLock.lock();
-                break;
-            case 4:
-                fourthLock.lock();
-                break;
-            case 5:
-                fifthLock.lock();
-                break;
-            case 6:
-                sixthLock.lock();
-                break;
-            case 7:
-                seventhLock.lock();
-                break;
-            case 8:
-                eighthLock.lock();
-                break;
-        }
-    }
 
     public static void locking(int lock1, int lock2, int lock3, int trainID) throws InterruptedException {
-        int result = 0;
+
         boolean done = false;
-        while (!done) {
-            if (checkLocks(lock1)) {
+        while (!done) { // keep this running until it gets to its location
+            if (checkLocks(lock1)) { // check and aquire first lock
                 System.out.printf("Train %d: HOLDS LOCK on Switch #%d \n\n", trainID,lock1);
                 try {
-                    if (checkLocks(lock2)) {
+                    if (checkLocks(lock2)) { // check and aquire second lock
                         System.out.printf("Train %d: HOLDS LOCK on Switch #%d \n\n", trainID,lock2);;
                         try {
                             if (checkLocks(lock3)) {
+                                //send it out! all ready
                                 System.out.printf("Train # HOLDS ALL NEEDED SWITCH LOCKS -- Train movement begins.\n\n\n",trainID);
                                 try {
                                     Thread.sleep((generator.nextInt(100)));
@@ -238,9 +149,7 @@ public void set(int value){
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        //finally {
-                        //  unlock(lock2);
-                        //}
+
                     } else {
                         //release fist lock and wait
                         System.out.printf("Train %d: UNABLE TO LOCK second required switch: Switch {%d}.\n",trainID,lock2);
@@ -251,12 +160,11 @@ public void set(int value){
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //finally {
-                //unlock(lock1);
-                //}
+
             } else {
+                //tell  it to wait
                 System.out.printf("Train %d: UNABLE TO LOCK first required switch: Switch {%d}. Train will wait...\n\n\n",trainID,lock1 );
-                Thread.sleep(25);
+                Thread.sleep(75);
             }
         }
     }
